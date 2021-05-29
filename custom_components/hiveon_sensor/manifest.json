@@ -1,0 +1,11 @@
+{
+  "domain": "hiveon_sensor",
+  "name": "Hiveon Sensor",
+  "version": "0.1.0",
+  "documentation": "https://github.com/scribblrsam/homeassistant-hiveon-sensor",
+  "dependencies": [],
+  "codeowners": ["@scribblrsam"],
+  "requirements": [],
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/scribblrsam/homeassistant-hiveon-sensor/issues"
+}
