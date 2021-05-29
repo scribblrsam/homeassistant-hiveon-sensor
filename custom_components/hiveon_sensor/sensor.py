@@ -5,7 +5,7 @@ import voluptuous
 from datetime import datetime, timedelta
 import urllib.error
 
-from const import *
+from .const import *
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
