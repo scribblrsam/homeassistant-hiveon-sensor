@@ -25,7 +25,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 def setup_platform(hass, config, add_entities, discovery_info=None):
     LOGGER.debug("Setup Hiveon Stats Sensor")
 
-    miner_address = config.get(CONF_MINER_ADDRESS).strip()
+    miner_address = config.get(CONF_MINER_ADDRESS).strip().lower()
     local_currency = config.get(CONF_CURRENCY_NAME).strip().lower()
     update_frequency = timedelta(minutes=(int(config.get(CONF_UPDATE_FREQUENCY))))
     name_override = config.get(CONF_NAME_OVERRIDE).strip()
