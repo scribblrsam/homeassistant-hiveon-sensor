@@ -5,7 +5,7 @@ import voluptuous
 from datetime import datetime, timedelta
 import urllib.error
 
-from const import *
+from .const import *
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
@@ -94,7 +94,7 @@ class HiveonStatsSensor(Entity):
         }
 
     def _update(self):
-        miner_stats_url = f"{HIVEON_API_ENDPOINT}miner/{self.miner_address}/ETH"
+        miner_stats_url = "https://hiveon.net/api/v1/stats/miner/" + self.miner_address + "/ETH"
 
         miner_stats_request = requests.get(url=miner_stats_url)
         miner_stats_data = miner_stats_request.json()
@@ -106,9 +106,9 @@ class HiveonStatsSensor(Entity):
                 self._state = "Online"
             else:
                 self._state = "Offline"
-            self._current_hashrate = miner_stats_data['hashrate']
-            self._average_hashrate_24h = miner_stats_data['hashrate24h']
-            self._reported_hashrate = miner_stats_data['reportedHashrate']
-            self._reported_hashrate_24h = miner_stats_data['reportedHashrate24h']
-            self._valid_shares = miner_stats_data['sharesStatusStats']['validCount']
-            self._stale_shares = miner_stats_data['sharesStatusStats']['staleCount']
+            self._current_hashrate = int(miner_stats_data['hashrate'])
+            self._average_hashrate_24h = int(miner_stats_data['hashrate24h'])
+            self._reported_hashrate = int(miner_stats_data['reportedHashrate'])
+            self._reported_hashrate_24h = int(miner_stats_data['reportedHashrate24h'])
+            self._valid_shares = int(miner_stats_data['sharesStatusStats']['validCount'])
+            self._stale_shares = int(miner_stats_data['sharesStatusStats']['staleCount'])
