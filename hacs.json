@@ -1,0 +1,7 @@
+{
+  "name": "Hiveon Stats Sensor",
+  "content_in_root": false,
+  "render_readme": true,
+  "domains": ["sensor"],
+  "iot_class": "cloud_poll"
+}
