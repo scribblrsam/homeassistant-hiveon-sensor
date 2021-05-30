@@ -90,14 +90,21 @@ class HiveonStatsSensor(Entity):
             "reported_hashrate": self._reported_hashrate,
             "reported_hashrate_24h": self._reported_hashrate_24h,
             "valid_shares": self._valid_shares,
-            "stale_shares": self._stale_shares
+            "stale_shares": self._stale_shares,
+            "unpaid": self._unpaid,
+            "expected_day": self._expected_earnings_day,
+            "expected_week": self._expected_earnings_week
         }
 
     def _update(self):
         miner_stats_url = "https://hiveon.net/api/v1/stats/miner/" + self.miner_address + "/ETH"
+        billing_stats_url = "https://hiveon.net/api/v1/stats/miner/" + self.miner_address + "/ETH/billing-acc"
 
         miner_stats_request = requests.get(url=miner_stats_url)
         miner_stats_data = miner_stats_request.json()
+
+        billing_stats_request = requests.get(url=billing_stats_url)
+        billing_stats_data = billing_stats_request.json()
 
         if miner_stats_request.ok:
             self._last_update = datetime.today().strftime("%d-%m-%Y %H:%M")
@@ -112,3 +119,8 @@ class HiveonStatsSensor(Entity):
             self._reported_hashrate_24h = int(miner_stats_data['reportedHashrate24h'])
             self._valid_shares = int(miner_stats_data['sharesStatusStats']['validCount'])
             self._stale_shares = int(miner_stats_data['sharesStatusStats']['staleCount'])
+
+        if billing_stats_request.ok:
+            self._unpaid = billing_stats_data['totalUnpaid']
+            self._expected_earnings_day = billing_stats_data['expectedReward24H']
+            self._expected_earnings_week = billing_stats_data['expectedRewardWeek']
