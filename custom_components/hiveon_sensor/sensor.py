@@ -99,12 +99,16 @@ class HiveonStatsSensor(Entity):
     def _update(self):
         miner_stats_url = "https://hiveon.net/api/v1/stats/miner/" + self.miner_address + "/ETH"
         billing_stats_url = "https://hiveon.net/api/v1/stats/miner/" + self.miner_address + "/ETH/billing-acc"
+        coin_gecko_url = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=" + self.local_currency
 
         miner_stats_request = requests.get(url=miner_stats_url)
         miner_stats_data = miner_stats_request.json()
 
         billing_stats_request = requests.get(url=billing_stats_url)
         billing_stats_data = billing_stats_request.json()
+
+        exchange_rate_request = requests.get(url=coin_gecko_url)
+        exchange_rate_data = exchange_rate_request.json()
 
         if miner_stats_request.ok:
             self._last_update = datetime.today().strftime("%d-%m-%Y %H:%M")
@@ -124,3 +128,9 @@ class HiveonStatsSensor(Entity):
             self._unpaid = billing_stats_data['totalUnpaid']
             self._expected_earnings_day = billing_stats_data['expectedReward24H']
             self._expected_earnings_week = billing_stats_data['expectedRewardWeek']
+
+        if exchange_rate_request.ok:
+            exchange_rate = exchange_rate_data['ethereum'][self.local_currency]
+            vars(self)['_expected_earnings_day_' + self.local_currency] = self._expected_earnings_day * exchange_rate
+            vars(self)['_expected_earnings_week_' + self.local_currency] = self._expected_earnings_week * exchange_rate
+            vars(self)['_unpaid_' + self.local_currency] = self._unpaid * exchange_rate
