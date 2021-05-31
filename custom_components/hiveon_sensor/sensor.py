@@ -67,6 +67,9 @@ class HiveonStatsSensor(Entity):
         self._unpaid = None
         self._expected_earnings_day = None
         self._expected_earnings_week = None
+        self._unpaid_local = None
+        self._expected_earnings_day_local = None
+        self._expected_earnings_week_local = None
 
     @property
     def name(self):
@@ -93,7 +96,10 @@ class HiveonStatsSensor(Entity):
             "stale_shares": self._stale_shares,
             "unpaid": self._unpaid,
             "expected_day": self._expected_earnings_day,
-            "expected_week": self._expected_earnings_week
+            "expected_week": self._expected_earnings_week,
+            "unpaid_local": self._unpaid_local,
+            "expected_day_local": self._expected_earnings_day_local,
+            "expected_week_local": self._expected_earnings_week_local
         }
 
     def _update(self):
@@ -131,6 +137,6 @@ class HiveonStatsSensor(Entity):
 
         if exchange_rate_request.ok:
             exchange_rate = exchange_rate_data['ethereum'][self.local_currency]
-            vars(self)['_expected_earnings_day_' + self.local_currency] = self._expected_earnings_day * exchange_rate
-            vars(self)['_expected_earnings_week_' + self.local_currency] = self._expected_earnings_week * exchange_rate
-            vars(self)['_unpaid_' + self.local_currency] = self._unpaid * exchange_rate
+            self._expected_earnings_day_local = self._expected_earnings_day * exchange_rate
+            self._expected_earnings_week_local = self._expected_earnings_week * exchange_rate
+            self._unpaid_local = self._unpaid * exchange_rate
